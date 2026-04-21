@@ -5,17 +5,12 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  workflow_call: 
-    secrets: # Permettre à d'autres workflows d'appeler celui-ci et de lui passer des secrets
-      SLACK_WEBHOOK:
-        required: false  # important pour l'étape 4
+  workflow_call:   # important pour l'étape 4
   schedule:
     - cron: '0 2 * * *'   # tous les jours à 02h00 UTC
 
 jobs:
   lint-and-test:
-    env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
     runs-on: ubuntu-latest
     timeout-minutes: 10        # ← annule le job après 10 min
     concurrency:
@@ -56,4 +51,5 @@ jobs:
         with:
           payload: |
             {"text": "CI ${{ job.status }} sur ${{ github.ref }}"}
-        
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
