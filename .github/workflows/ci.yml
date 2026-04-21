@@ -10,6 +10,10 @@ on:
 jobs:
   lint-and-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10        # ← annule le job après 10 min
+    concurrency:
+      group: ci-${{ github.ref }}   # ← un seul run par branche
+      cancel-in-progress: true      # ← annule l'ancien si nouveau push
     strategy:
       matrix:
         node-version: [18, 20, 22]   # teste sur 3 versions en parallèle
